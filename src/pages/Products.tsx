@@ -62,22 +62,22 @@ export const Products: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6 md:space-y-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Gestão de Produtos</h1>
-          <p className="text-zinc-400">Gerencie os produtos e serviços da sua carteira</p>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Gestão de Produtos</h1>
+          <p className="text-zinc-400 text-sm md:text-base">Gerencie os produtos e serviços da sua carteira</p>
         </div>
         <button
           onClick={() => openModal()}
-          className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-zinc-950 px-4 py-2 rounded-xl font-semibold transition-all"
+          className="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-zinc-950 px-4 py-2.5 rounded-xl font-semibold transition-all w-full sm:w-auto"
         >
           <Plus className="w-4 h-4" />
           Novo Produto
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {products.map((product) => (
           <div key={product.id} className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl space-y-4 group transition-all hover:border-emerald-500/50">
             <div className="flex items-start justify-between">

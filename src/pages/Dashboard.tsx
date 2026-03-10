@@ -152,15 +152,15 @@ export const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="space-y-6 md:space-y-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard Analítico</h1>
-          <p className="text-zinc-400">Visão geral da sua carteira de clientes</p>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Dashboard Analítico</h1>
+          <p className="text-zinc-400 text-sm md:text-base">Visão geral da sua carteira de clientes</p>
         </div>
         <button
           onClick={exportToExcel}
-          className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-zinc-950 px-4 py-2 rounded-xl font-semibold transition-all"
+          className="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-zinc-950 px-4 py-2.5 rounded-xl font-semibold transition-all w-full sm:w-auto"
         >
           <Download className="w-4 h-4" />
           Exportar Excel
@@ -168,15 +168,15 @@ export const Dashboard: React.FC = () => {
       </div>
 
       {/* Filters */}
-      <div className="bg-zinc-900/50 border border-zinc-800 p-6 rounded-2xl flex flex-wrap gap-6 items-end">
-        <div className="space-y-2 relative">
+      <div className="bg-zinc-900/50 border border-zinc-800 p-4 md:p-6 rounded-2xl flex flex-col md:flex-row gap-4 md:gap-6 items-stretch md:items-end">
+        <div className="space-y-2 relative flex-1 md:flex-none">
           <label className="text-xs font-medium text-zinc-500 uppercase tracking-wider flex items-center gap-2">
             <Filter className="w-3 h-3" /> Produto
           </label>
           
           <button
             onClick={() => setIsProductDropdownOpen(!isProductDropdownOpen)}
-            className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-emerald-500/50 outline-none w-64 flex items-center justify-between group"
+            className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-emerald-500/50 outline-none w-full md:w-64 flex items-center justify-between group"
           >
             <span className="truncate">
               {selectedProducts.length === 0 
@@ -194,7 +194,7 @@ export const Dashboard: React.FC = () => {
                 className="fixed inset-0 z-10" 
                 onClick={() => setIsProductDropdownOpen(false)}
               />
-              <div className="absolute top-full left-0 mt-2 w-64 bg-zinc-900 border border-zinc-800 rounded-xl shadow-2xl z-20 py-2 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+              <div className="absolute top-full left-0 mt-2 w-full md:w-64 bg-zinc-900 border border-zinc-800 rounded-xl shadow-2xl z-20 py-2 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
                 <button
                   onClick={() => {
                     setSelectedProducts([]);
@@ -236,29 +236,31 @@ export const Dashboard: React.FC = () => {
           )}
         </div>
 
-        <div className="space-y-2">
-          <label className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Início</label>
-          <input
-            type="month"
-            value={dateRange.start}
-            onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
-            className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-emerald-500/50 outline-none"
-          />
-        </div>
+        <div className="grid grid-cols-2 gap-4 flex-1">
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Início</label>
+            <input
+              type="month"
+              value={dateRange.start}
+              onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
+              className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-emerald-500/50 outline-none w-full"
+            />
+          </div>
 
-        <div className="space-y-2">
-          <label className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Fim</label>
-          <input
-            type="month"
-            value={dateRange.end}
-            onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
-            className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-emerald-500/50 outline-none"
-          />
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Fim</label>
+            <input
+              type="month"
+              value={dateRange.end}
+              onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
+              className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-emerald-500/50 outline-none w-full"
+            />
+          </div>
         </div>
       </div>
 
       {/* Metric Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
         <MetricCard 
           title="Clientes Ativos" 
           value={formatNumber(metrics?.activeClients || 0)} 

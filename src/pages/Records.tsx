@@ -90,15 +90,15 @@ export const Records: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6 md:space-y-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Registros Mensais</h1>
-          <p className="text-zinc-400">Gerencie os dados mensais de cada produto</p>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Registros Mensais</h1>
+          <p className="text-zinc-400 text-sm md:text-base">Gerencie os dados mensais de cada produto</p>
         </div>
         <button
           onClick={() => openModal()}
-          className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-zinc-950 px-4 py-2 rounded-xl font-semibold transition-all"
+          className="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-zinc-950 px-4 py-2.5 rounded-xl font-semibold transition-all w-full sm:w-auto"
         >
           <Plus className="w-4 h-4" />
           Novo Registro
