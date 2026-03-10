@@ -52,36 +52,55 @@ export const Dashboard: React.FC = () => {
     };
   }, []);
 
-  const filteredRecords = useMemo(() => {
-    return records.filter(record => {
+  const aggregatedRecords = useMemo(() => {
+    const filtered = records.filter(record => {
       const matchProduct = selectedProduct === 'all' || record.productId === selectedProduct;
       const matchStart = !dateRange.start || record.date >= dateRange.start;
       const matchEnd = !dateRange.end || record.date <= dateRange.end;
       return matchProduct && matchStart && matchEnd;
     });
+
+    if (selectedProduct !== 'all') return filtered;
+
+    // Group by date and sum values
+    const grouped = filtered.reduce((acc, r) => {
+      if (!acc[r.date]) {
+        acc[r.date] = { ...r, id: r.date };
+      } else {
+        acc[r.date].activeClientsPrevious += r.activeClientsPrevious;
+        acc[r.date].newContracts += r.newContracts;
+        acc[r.date].cancellationRequests += r.cancellationRequests;
+        acc[r.date].cancelledInMonth += r.cancelledInMonth;
+        acc[r.date].autoCancellations += r.autoCancellations;
+        acc[r.date].inactivationsInMonth += r.inactivationsInMonth;
+        acc[r.date].totalMRR += r.totalMRR;
+        acc[r.date].lostMRRCancel += r.lostMRRCancel;
+        acc[r.date].lostMRRInact += r.lostMRRInact;
+      }
+      return acc;
+    }, {} as Record<string, MonthlyRecord>);
+
+    return (Object.values(grouped) as MonthlyRecord[]).sort((a, b) => a.date.localeCompare(b.date));
   }, [records, selectedProduct, dateRange]);
 
   const metrics = useMemo(() => {
-    if (filteredRecords.length === 0) return null;
+    if (aggregatedRecords.length === 0) return null;
 
-    const lastRecord = filteredRecords[filteredRecords.length - 1];
+    const lastRecord = aggregatedRecords[aggregatedRecords.length - 1];
     
-    const totalNew = filteredRecords.reduce((acc, r) => acc + r.newContracts, 0);
-    const totalCancelled = filteredRecords.reduce((acc, r) => acc + r.cancelledInMonth, 0);
-    const totalAuto = filteredRecords.reduce((acc, r) => acc + r.autoCancellations, 0);
-    const totalInactivated = filteredRecords.reduce((acc, r) => acc + r.inactivationsInMonth, 0);
+    const totalNew = aggregatedRecords.reduce((acc, r) => acc + r.newContracts, 0);
+    const totalCancelled = aggregatedRecords.reduce((acc, r) => acc + r.cancelledInMonth, 0);
+    const totalAuto = aggregatedRecords.reduce((acc, r) => acc + r.autoCancellations, 0);
+    const totalInactivated = aggregatedRecords.reduce((acc, r) => acc + r.inactivationsInMonth, 0);
     
     const totalMRR = lastRecord.totalMRR;
-    const lostMRRCancel = filteredRecords.reduce((acc, r) => acc + r.lostMRRCancel, 0);
-    const lostMRRInact = filteredRecords.reduce((acc, r) => acc + r.lostMRRInact, 0);
+    const lostMRRCancel = aggregatedRecords.reduce((acc, r) => acc + r.lostMRRCancel, 0);
+    const lostMRRInact = aggregatedRecords.reduce((acc, r) => acc + r.lostMRRInact, 0);
     
-    // Monthly Churn calculation and then average
-    const monthlyChurns = filteredRecords.map(r => 
-      r.activeClientsPrevious > 0 
-        ? ((r.cancelledInMonth + r.autoCancellations) / r.activeClientsPrevious) * 100 
-        : 0
-    );
-    const churnRate = monthlyChurns.reduce((acc, val) => acc + val, 0) / monthlyChurns.length;
+    // Churn calculation: (Total Cancelled + Total Auto) / Last Month Active Clients
+    const churnRate = lastRecord.activeClientsPrevious > 0 
+      ? ((totalCancelled + totalAuto) / lastRecord.activeClientsPrevious) * 100 
+      : 0;
 
     return {
       activeClients: lastRecord.activeClientsPrevious,
@@ -94,10 +113,10 @@ export const Dashboard: React.FC = () => {
       lostMRRInact,
       churnRate
     };
-  }, [filteredRecords]);
+  }, [aggregatedRecords]);
 
   const chartData = useMemo(() => {
-    return filteredRecords.map(r => ({
+    return aggregatedRecords.map(r => ({
       date: r.date,
       active: r.activeClientsPrevious,
       cancelled: r.cancelledInMonth + r.autoCancellations,
@@ -106,11 +125,11 @@ export const Dashboard: React.FC = () => {
       lostMRR: r.lostMRRCancel + r.lostMRRInact,
       churn: r.activeClientsPrevious > 0 ? ((r.cancelledInMonth + r.autoCancellations) / r.activeClientsPrevious) * 100 : 0
     }));
-  }, [filteredRecords]);
+  }, [aggregatedRecords]);
 
   const exportToExcel = () => {
-    const data = filteredRecords.map(r => ({
-      'Produto': products.find(p => p.id === r.productId)?.name || 'N/A',
+    const data = aggregatedRecords.map(r => ({
+      'Produto': selectedProduct === 'all' ? 'Todos' : products.find(p => p.id === r.productId)?.name || 'N/A',
       'Mês/Ano': r.date,
       'Clientes Ativos (Ant.)': r.activeClientsPrevious,
       'Novos Contratos': r.newContracts,
@@ -235,7 +254,7 @@ export const Dashboard: React.FC = () => {
           color="orange" 
         />
         <MetricCard 
-          title="Taxa de Churn (Média)" 
+          title="Taxa de Churn (Período)" 
           value={formatPercent(metrics?.churnRate || 0)} 
           icon={Percent} 
           color="purple" 
@@ -280,9 +299,16 @@ export const Dashboard: React.FC = () => {
             <AreaChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
               <XAxis dataKey="date" stroke="#71717a" fontSize={12} tickLine={false} axisLine={false} />
-              <YAxis stroke="#71717a" fontSize={12} tickLine={false} axisLine={false} />
+              <YAxis 
+                stroke="#71717a" 
+                fontSize={12} 
+                tickLine={false} 
+                axisLine={false} 
+                tickFormatter={(value) => `R$ ${value.toLocaleString('pt-BR')}`}
+              />
               <Tooltip 
                 contentStyle={{ backgroundColor: '#09090b', border: '1px solid #27272a', borderRadius: '8px' }}
+                formatter={(value: number) => [formatCurrency(value), ""]}
               />
               <Legend verticalAlign="top" height={36}/>
               <Area type="monotone" dataKey="mrr" name="MRR Total" stroke="#10b981" fill="url(#colorMrr)" />
@@ -306,9 +332,17 @@ export const Dashboard: React.FC = () => {
             <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
               <XAxis dataKey="date" stroke="#71717a" fontSize={12} tickLine={false} axisLine={false} />
-              <YAxis stroke="#71717a" fontSize={12} tickLine={false} axisLine={false} unit="%" />
+              <YAxis 
+                stroke="#71717a" 
+                fontSize={12} 
+                tickLine={false} 
+                axisLine={false} 
+                unit="%" 
+                tickFormatter={(value) => `${value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}%`}
+              />
               <Tooltip 
                 contentStyle={{ backgroundColor: '#09090b', border: '1px solid #27272a', borderRadius: '8px' }}
+                formatter={(value: number) => [`${value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}%`, "Churn"]}
               />
               <Line type="monotone" dataKey="churn" stroke="#a855f7" strokeWidth={3} dot={{ r: 4, fill: '#a855f7' }} />
             </LineChart>
