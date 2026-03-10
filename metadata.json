@@ -1,0 +1,5 @@
+{
+  "name": "Controle de Carteira",
+  "description": "Sistema robusto de controle de carteira de clientes com analytics, MRR e gestão de churn.",
+  "requestFramePermissions": []
+}
