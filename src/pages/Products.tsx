@@ -1,22 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import { collection, query, onSnapshot, addDoc, updateDoc, deleteDoc, doc, orderBy, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase';
-import { Product } from '../types';
-import { Plus, Pencil, Trash2, Package, X } from 'lucide-react';
+import { Product, MonthlyRecord } from '../types';
+import { Plus, Pencil, Trash2, Package, X, Users } from 'lucide-react';
 
 export const Products: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [records, setRecords] = useState<MonthlyRecord[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [formData, setFormData] = useState({ name: '', description: '' });
 
   useEffect(() => {
-    const q = query(collection(db, 'products'), orderBy('name'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
+    const qProducts = query(collection(db, 'products'), orderBy('name'));
+    const unsubscribeProducts = onSnapshot(qProducts, (snapshot) => {
       setProducts(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product)));
     });
-    return unsubscribe;
+
+    const qRecords = query(collection(db, 'records'), orderBy('date', 'desc'));
+    const unsubscribeRecords = onSnapshot(qRecords, (snapshot) => {
+      setRecords(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as MonthlyRecord)));
+    });
+
+    return () => {
+      unsubscribeProducts();
+      unsubscribeRecords();
+    };
   }, []);
+
+  const getActiveClients = (productId: string) => {
+    const productRecords = records.filter(r => r.productId === productId);
+    if (productRecords.length === 0) return 0;
+    return productRecords[0].activeClientsPrevious;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -84,13 +100,19 @@ export const Products: React.FC = () => {
               <div className="p-3 bg-sky-500/10 rounded-xl">
                 <Package className="w-6 h-6 text-sky-400" />
               </div>
-              <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button onClick={() => openModal(product)} className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg">
-                  <Pencil className="w-4 h-4" />
-                </button>
-                <button onClick={() => handleDelete(product.id)} className="p-2 text-zinc-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg">
-                  <Trash2 className="w-4 h-4" />
-                </button>
+              <div className="flex flex-col items-end gap-3">
+                <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button onClick={() => openModal(product)} className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg">
+                    <Pencil className="w-4 h-4" />
+                  </button>
+                  <button onClick={() => handleDelete(product.id)} className="p-2 text-zinc-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg">
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+                <div className="bg-zinc-950/50 border border-zinc-800 px-3 py-1.5 rounded-lg flex items-center gap-2">
+                  <Users className="w-4 h-4 text-sky-400" />
+                  <span className="text-sm font-bold text-white">{getActiveClients(product.id)}</span>
+                </div>
               </div>
             </div>
             <div>
