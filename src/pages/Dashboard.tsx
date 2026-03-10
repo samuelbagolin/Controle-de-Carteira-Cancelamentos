@@ -10,7 +10,9 @@ import {
   TrendingDown, 
   Percent,
   Download,
-  Filter
+  Filter,
+  ChevronDown,
+  Check
 } from 'lucide-react';
 import { 
   LineChart, 
@@ -32,7 +34,8 @@ import * as XLSX from 'xlsx';
 export const Dashboard: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [records, setRecords] = useState<MonthlyRecord[]>([]);
-  const [selectedProduct, setSelectedProduct] = useState<string>('all');
+  const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
+  const [isProductDropdownOpen, setIsProductDropdownOpen] = useState(false);
   const [dateRange, setDateRange] = useState({ start: '', end: '' });
 
   useEffect(() => {
@@ -54,15 +57,13 @@ export const Dashboard: React.FC = () => {
 
   const aggregatedRecords = useMemo(() => {
     const filtered = records.filter(record => {
-      const matchProduct = selectedProduct === 'all' || record.productId === selectedProduct;
+      const matchProduct = selectedProducts.length === 0 || selectedProducts.includes(record.productId);
       const matchStart = !dateRange.start || record.date >= dateRange.start;
       const matchEnd = !dateRange.end || record.date <= dateRange.end;
       return matchProduct && matchStart && matchEnd;
     });
 
-    if (selectedProduct !== 'all') return filtered;
-
-    // Group by date and sum values
+    // Group by date and sum values for consolidated view
     const grouped = filtered.reduce((acc, r) => {
       if (!acc[r.date]) {
         acc[r.date] = { ...r, id: r.date };
@@ -81,7 +82,7 @@ export const Dashboard: React.FC = () => {
     }, {} as Record<string, MonthlyRecord>);
 
     return (Object.values(grouped) as MonthlyRecord[]).sort((a, b) => a.date.localeCompare(b.date));
-  }, [records, selectedProduct, dateRange]);
+  }, [records, selectedProducts, dateRange]);
 
   const metrics = useMemo(() => {
     if (aggregatedRecords.length === 0) return null;
@@ -129,7 +130,9 @@ export const Dashboard: React.FC = () => {
 
   const exportToExcel = () => {
     const data = aggregatedRecords.map(r => ({
-      'Produto': selectedProduct === 'all' ? 'Todos' : products.find(p => p.id === r.productId)?.name || 'N/A',
+      'Produto': selectedProducts.length === 0 
+        ? 'Todos' 
+        : selectedProducts.map(id => products.find(p => p.id === id)?.name).join(', '),
       'Mês/Ano': r.date,
       'Clientes Ativos (Ant.)': r.activeClientsPrevious,
       'Novos Contratos': r.newContracts,
@@ -166,20 +169,71 @@ export const Dashboard: React.FC = () => {
 
       {/* Filters */}
       <div className="bg-zinc-900/50 border border-zinc-800 p-6 rounded-2xl flex flex-wrap gap-6 items-end">
-        <div className="space-y-2">
+        <div className="space-y-2 relative">
           <label className="text-xs font-medium text-zinc-500 uppercase tracking-wider flex items-center gap-2">
             <Filter className="w-3 h-3" /> Produto
           </label>
-          <select
-            value={selectedProduct}
-            onChange={(e) => setSelectedProduct(e.target.value)}
-            className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-emerald-500/50 outline-none w-48"
+          
+          <button
+            onClick={() => setIsProductDropdownOpen(!isProductDropdownOpen)}
+            className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-emerald-500/50 outline-none w-64 flex items-center justify-between group"
           >
-            <option value="all">Todos os Produtos</option>
-            {products.map(p => (
-              <option key={p.id} value={p.id}>{p.name}</option>
-            ))}
-          </select>
+            <span className="truncate">
+              {selectedProducts.length === 0 
+                ? 'Todos os Produtos' 
+                : selectedProducts.length === 1 
+                  ? products.find(p => p.id === selectedProducts[0])?.name 
+                  : `${selectedProducts.length} produtos selecionados`}
+            </span>
+            <ChevronDown className={`w-4 h-4 text-zinc-500 transition-transform ${isProductDropdownOpen ? 'rotate-180' : ''}`} />
+          </button>
+
+          {isProductDropdownOpen && (
+            <>
+              <div 
+                className="fixed inset-0 z-10" 
+                onClick={() => setIsProductDropdownOpen(false)}
+              />
+              <div className="absolute top-full left-0 mt-2 w-64 bg-zinc-900 border border-zinc-800 rounded-xl shadow-2xl z-20 py-2 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                <button
+                  onClick={() => {
+                    setSelectedProducts([]);
+                    setIsProductDropdownOpen(false);
+                  }}
+                  className="w-full px-4 py-2 text-left text-sm hover:bg-zinc-800 flex items-center justify-between group"
+                >
+                  <span className={selectedProducts.length === 0 ? 'text-emerald-500 font-medium' : 'text-zinc-300'}>
+                    Todos os Produtos
+                  </span>
+                  {selectedProducts.length === 0 && <Check className="w-4 h-4 text-emerald-500" />}
+                </button>
+                <div className="h-px bg-zinc-800 my-1" />
+                <div className="max-h-60 overflow-y-auto">
+                  {products.map(p => {
+                    const isSelected = selectedProducts.includes(p.id);
+                    return (
+                      <button
+                        key={p.id}
+                        onClick={() => {
+                          setSelectedProducts(prev => 
+                            isSelected 
+                              ? prev.filter(id => id !== p.id) 
+                              : [...prev, p.id]
+                          );
+                        }}
+                        className="w-full px-4 py-2 text-left text-sm hover:bg-zinc-800 flex items-center justify-between group"
+                      >
+                        <span className={isSelected ? 'text-emerald-500 font-medium' : 'text-zinc-300'}>
+                          {p.name}
+                        </span>
+                        {isSelected && <Check className="w-4 h-4 text-emerald-500" />}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </>
+          )}
         </div>
 
         <div className="space-y-2">
