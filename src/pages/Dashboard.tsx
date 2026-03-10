@@ -103,6 +103,11 @@ export const Dashboard: React.FC = () => {
       ? ((totalCancelled + totalAuto) / lastRecord.activeClientsPrevious) * 100 
       : 0;
 
+    // MRR Churn calculation: MRR Perdido (Canc.) / MRR Total
+    const mrrChurnRate = totalMRR > 0
+      ? (lostMRRCancel / totalMRR) * 100
+      : 0;
+
     return {
       activeClients: lastRecord.activeClientsPrevious,
       newContracts: totalNew,
@@ -112,7 +117,8 @@ export const Dashboard: React.FC = () => {
       totalMRR,
       lostMRRCancel,
       lostMRRInact,
-      churnRate
+      churnRate,
+      mrrChurnRate
     };
   }, [aggregatedRecords]);
 
@@ -314,6 +320,12 @@ export const Dashboard: React.FC = () => {
           value={formatPercent(metrics?.churnRate || 0)} 
           icon={Percent} 
           color="purple" 
+        />
+        <MetricCard 
+          title="Taxa de Churn (MRR)" 
+          value={formatPercent(metrics?.mrrChurnRate || 0)} 
+          icon={Percent} 
+          color="red" 
         />
       </div>
 
