@@ -39,7 +39,7 @@ export const Layout: React.FC = () => {
           >
             <Menu className="w-6 h-6" />
           </button>
-          <span className="font-bold text-emerald-500">Controle de Carteira</span>
+          <span className="font-bold text-sky-400">Controle de Carteira</span>
           <div className="w-10" /> {/* Spacer */}
         </header>
 

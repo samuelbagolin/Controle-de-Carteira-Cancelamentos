@@ -33,8 +33,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
     <aside className="w-full lg:w-64 border-r border-zinc-800 bg-zinc-900/50 flex flex-col h-full">
       <div className="p-6 flex items-center justify-between lg:justify-start gap-3">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-emerald-500/10 rounded-lg">
-            <TrendingUp className="w-6 h-6 text-emerald-500" />
+          <div className="p-2 bg-sky-500/10 rounded-lg">
+            <TrendingUp className="w-6 h-6 text-sky-400" />
           </div>
           <span className="font-bold text-lg tracking-tight">Controle de Carteira</span>
         </div>
@@ -57,7 +57,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
             className={({ isActive }) => cn(
               "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group",
               isActive 
-                ? "bg-emerald-500/10 text-emerald-500" 
+                ? "bg-sky-500/10 text-sky-400" 
                 : "text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100"
             )}
           >
@@ -66,6 +66,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
           </NavLink>
         ))}
       </nav>
+
+      <div className="p-6 mt-auto">
+        <img 
+          src="https://setuptecnologia.com.br/wp-content/uploads/2020/03/Logo-Setup_white-768x259.png" 
+          alt="Setup Tecnologia" 
+          className="w-full h-auto opacity-80 hover:opacity-100 transition-opacity"
+          referrerPolicy="no-referrer"
+        />
+      </div>
     </aside>
   );
 };

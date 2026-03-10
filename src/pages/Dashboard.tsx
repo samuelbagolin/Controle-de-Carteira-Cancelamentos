@@ -160,7 +160,7 @@ export const Dashboard: React.FC = () => {
         </div>
         <button
           onClick={exportToExcel}
-          className="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-zinc-950 px-4 py-2.5 rounded-xl font-semibold transition-all w-full sm:w-auto"
+          className="flex items-center justify-center gap-2 bg-sky-500 hover:bg-sky-400 text-zinc-950 px-4 py-2.5 rounded-xl font-semibold transition-all w-full sm:w-auto"
         >
           <Download className="w-4 h-4" />
           Exportar Excel
@@ -176,7 +176,7 @@ export const Dashboard: React.FC = () => {
           
           <button
             onClick={() => setIsProductDropdownOpen(!isProductDropdownOpen)}
-            className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-emerald-500/50 outline-none w-full md:w-64 flex items-center justify-between group"
+            className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-sky-500/50 outline-none w-full md:w-64 flex items-center justify-between group"
           >
             <span className="truncate">
               {selectedProducts.length === 0 
@@ -202,10 +202,10 @@ export const Dashboard: React.FC = () => {
                   }}
                   className="w-full px-4 py-2 text-left text-sm hover:bg-zinc-800 flex items-center justify-between group"
                 >
-                  <span className={selectedProducts.length === 0 ? 'text-emerald-500 font-medium' : 'text-zinc-300'}>
+                  <span className={selectedProducts.length === 0 ? 'text-sky-400 font-medium' : 'text-zinc-300'}>
                     Todos os Produtos
                   </span>
-                  {selectedProducts.length === 0 && <Check className="w-4 h-4 text-emerald-500" />}
+                  {selectedProducts.length === 0 && <Check className="w-4 h-4 text-sky-400" />}
                 </button>
                 <div className="h-px bg-zinc-800 my-1" />
                 <div className="max-h-60 overflow-y-auto">
@@ -223,10 +223,10 @@ export const Dashboard: React.FC = () => {
                         }}
                         className="w-full px-4 py-2 text-left text-sm hover:bg-zinc-800 flex items-center justify-between group"
                       >
-                        <span className={isSelected ? 'text-emerald-500 font-medium' : 'text-zinc-300'}>
+                        <span className={isSelected ? 'text-sky-400 font-medium' : 'text-zinc-300'}>
                           {p.name}
                         </span>
-                        {isSelected && <Check className="w-4 h-4 text-emerald-500" />}
+                        {isSelected && <Check className="w-4 h-4 text-sky-400" />}
                       </button>
                     );
                   })}
@@ -243,7 +243,7 @@ export const Dashboard: React.FC = () => {
               type="month"
               value={dateRange.start}
               onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
-              className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-emerald-500/50 outline-none w-full"
+              className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-sky-500/50 outline-none w-full"
             />
           </div>
 
@@ -253,7 +253,7 @@ export const Dashboard: React.FC = () => {
               type="month"
               value={dateRange.end}
               onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
-              className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-emerald-500/50 outline-none w-full"
+              className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-sky-500/50 outline-none w-full"
             />
           </div>
         </div>
@@ -265,7 +265,7 @@ export const Dashboard: React.FC = () => {
           title="Clientes Ativos" 
           value={formatNumber(metrics?.activeClients || 0)} 
           icon={Users} 
-          color="emerald" 
+          color="sky" 
         />
         <MetricCard 
           title="Novos Contratos" 
@@ -295,7 +295,7 @@ export const Dashboard: React.FC = () => {
           title="MRR Total" 
           value={formatCurrency(metrics?.totalMRR || 0)} 
           icon={DollarSign} 
-          color="emerald" 
+          color="sky" 
         />
         <MetricCard 
           title="MRR Perdido (Canc.)" 
@@ -327,9 +327,9 @@ export const Dashboard: React.FC = () => {
               <YAxis stroke="#71717a" fontSize={12} tickLine={false} axisLine={false} />
               <Tooltip 
                 contentStyle={{ backgroundColor: '#09090b', border: '1px solid #27272a', borderRadius: '8px' }}
-                itemStyle={{ color: '#10b981' }}
+                itemStyle={{ color: '#0ea5e9' }}
               />
-              <Line type="monotone" dataKey="active" stroke="#10b981" strokeWidth={3} dot={{ r: 4, fill: '#10b981' }} activeDot={{ r: 6 }} />
+              <Line type="monotone" dataKey="active" stroke="#0ea5e9" strokeWidth={3} dot={{ r: 4, fill: '#0ea5e9' }} activeDot={{ r: 6 }} />
             </LineChart>
           </ResponsiveContainer>
         </ChartContainer>
@@ -367,12 +367,12 @@ export const Dashboard: React.FC = () => {
                 formatter={(value: number) => [formatCurrency(value), ""]}
               />
               <Legend verticalAlign="top" height={36}/>
-              <Area type="monotone" dataKey="mrr" name="MRR Total" stroke="#10b981" fill="url(#colorMrr)" />
+              <Area type="monotone" dataKey="mrr" name="MRR Total" stroke="#0ea5e9" fill="url(#colorMrr)" />
               <Area type="monotone" dataKey="lostMRR" name="MRR Perdido" stroke="#ef4444" fill="url(#colorLost)" />
               <defs>
                 <linearGradient id="colorMrr" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                  <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.3}/>
+                  <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0}/>
                 </linearGradient>
                 <linearGradient id="colorLost" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3}/>
@@ -411,11 +411,12 @@ export const Dashboard: React.FC = () => {
 
 const MetricCard: React.FC<{ title: string; value: string; icon: any; color: string }> = ({ title, value, icon: Icon, color }) => {
   const colorClasses: Record<string, string> = {
-    emerald: "text-emerald-500 bg-emerald-500/10",
+    sky: "text-sky-400 bg-sky-500/10",
     blue: "text-blue-500 bg-blue-500/10",
     red: "text-red-500 bg-red-500/10",
     orange: "text-orange-500 bg-orange-500/10",
     purple: "text-purple-500 bg-purple-500/10",
+    zinc: "text-zinc-400 bg-zinc-400/10",
   };
 
   return (

@@ -33,8 +33,8 @@ export const Login: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center bg-zinc-950 p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="inline-flex p-3 bg-emerald-500/10 rounded-2xl mb-4">
-            <TrendingUp className="w-10 h-10 text-emerald-500" />
+          <div className="inline-flex p-3 bg-sky-500/10 rounded-2xl mb-4">
+            <TrendingUp className="w-10 h-10 text-sky-400" />
           </div>
           <h1 className="text-3xl font-bold text-white tracking-tight">Bem-vindo de volta</h1>
           <p className="text-zinc-400 mt-2">Acesse sua carteira de clientes</p>
@@ -58,7 +58,7 @@ export const Login: React.FC = () => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 pl-12 pr-4 text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all"
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 pl-12 pr-4 text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-sky-500/50 transition-all"
                   placeholder="seu@email.com"
                 />
               </div>
@@ -73,7 +73,7 @@ export const Login: React.FC = () => {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 pl-12 pr-4 text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all"
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 pl-12 pr-4 text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-sky-500/50 transition-all"
                   placeholder="••••••••"
                 />
               </div>
@@ -82,7 +82,7 @@ export const Login: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold py-3 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-sky-500 hover:bg-sky-400 text-zinc-950 font-bold py-3 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Entrando...' : 'Entrar'}
             </button>

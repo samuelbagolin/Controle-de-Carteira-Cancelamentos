@@ -70,7 +70,7 @@ export const Products: React.FC = () => {
         </div>
         <button
           onClick={() => openModal()}
-          className="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-zinc-950 px-4 py-2.5 rounded-xl font-semibold transition-all w-full sm:w-auto"
+          className="flex items-center justify-center gap-2 bg-sky-500 hover:bg-sky-400 text-zinc-950 px-4 py-2.5 rounded-xl font-semibold transition-all w-full sm:w-auto"
         >
           <Plus className="w-4 h-4" />
           Novo Produto
@@ -79,10 +79,10 @@ export const Products: React.FC = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {products.map((product) => (
-          <div key={product.id} className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl space-y-4 group transition-all hover:border-emerald-500/50">
+          <div key={product.id} className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl space-y-4 group transition-all hover:border-sky-500/50">
             <div className="flex items-start justify-between">
-              <div className="p-3 bg-emerald-500/10 rounded-xl">
-                <Package className="w-6 h-6 text-emerald-500" />
+              <div className="p-3 bg-sky-500/10 rounded-xl">
+                <Package className="w-6 h-6 text-sky-400" />
               </div>
               <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button onClick={() => openModal(product)} className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg">
@@ -118,7 +118,7 @@ export const Products: React.FC = () => {
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-sky-500/50"
                   placeholder="Ex: Sittax - Setup"
                 />
               </div>
@@ -127,13 +127,13 @@ export const Products: React.FC = () => {
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50 h-32 resize-none"
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-sky-500/50 h-32 resize-none"
                   placeholder="Detalhes sobre o produto..."
                 />
               </div>
               <button
                 type="submit"
-                className="w-full bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold py-3 rounded-xl transition-all"
+                className="w-full bg-sky-500 hover:bg-sky-400 text-zinc-950 font-bold py-3 rounded-xl transition-all"
               >
                 {editingProduct ? 'Salvar Alterações' : 'Criar Produto'}
               </button>

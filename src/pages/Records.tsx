@@ -98,7 +98,7 @@ export const Records: React.FC = () => {
         </div>
         <button
           onClick={() => openModal()}
-          className="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-zinc-950 px-4 py-2.5 rounded-xl font-semibold transition-all w-full sm:w-auto"
+          className="flex items-center justify-center gap-2 bg-sky-500 hover:bg-sky-400 text-zinc-950 px-4 py-2.5 rounded-xl font-semibold transition-all w-full sm:w-auto"
         >
           <Plus className="w-4 h-4" />
           Novo Registro
@@ -126,7 +126,7 @@ export const Records: React.FC = () => {
                     {products.find(p => p.id === record.productId)?.name || 'N/A'}
                   </td>
                   <td className="px-6 py-4 text-right text-zinc-300">{formatNumber(record.activeClientsPrevious)}</td>
-                  <td className="px-6 py-4 text-right text-emerald-500 font-medium">+{record.newContracts}</td>
+                  <td className="px-6 py-4 text-right text-sky-400 font-medium">+{record.newContracts}</td>
                   <td className="px-6 py-4 text-right text-white font-semibold">{formatCurrency(record.totalMRR)}</td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex justify-end gap-2">
@@ -162,7 +162,7 @@ export const Records: React.FC = () => {
                     required
                     value={formData.productId}
                     onChange={(e) => setFormData({ ...formData, productId: e.target.value })}
-                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-sky-500/50"
                   >
                     <option value="">Selecione um produto</option>
                     {products.map(p => (
@@ -177,7 +177,7 @@ export const Records: React.FC = () => {
                     required
                     value={formData.date}
                     onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-sky-500/50"
                   />
                 </div>
               </div>
@@ -200,7 +200,7 @@ export const Records: React.FC = () => {
               <div className="pt-4">
                 <button
                   type="submit"
-                  className="w-full bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold py-4 rounded-xl transition-all"
+                  className="w-full bg-sky-500 hover:bg-sky-400 text-zinc-950 font-bold py-4 rounded-xl transition-all"
                 >
                   {editingRecord ? 'Salvar Alterações' : 'Salvar Registro'}
                 </button>
@@ -224,7 +224,7 @@ const FormField: React.FC<{ label: string; value: any; onChange: (v: number) => 
         required
         value={value}
         onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
-        className={`w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 ${isCurrency ? 'pl-10' : 'px-4'} pr-4 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50`}
+        className={`w-full bg-zinc-950 border border-zinc-800 rounded-xl py-3 ${isCurrency ? 'pl-10' : 'px-4'} pr-4 text-white focus:outline-none focus:ring-2 focus:ring-sky-500/50`}
       />
     </div>
   </div>
